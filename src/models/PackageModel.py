@@ -1,143 +1,189 @@
+"""
+    ImageFilters Package Model
 
-from pydantic import Field, validator
+    2 Executor yapısı:
+    - RotateImage: 1 input (resim), 1 output (döndürülmüş resim)
+    - BlendImages: 2 input (2 resim), 2 output (karışım + fark)
+
+    Yapı aşağıdan yukarıya doğru yazılmıştır (Şartname Bölüm 11).
+"""
+
+from pydantic import Field
 from typing import List, Optional, Union, Literal
-from sdks.novavision.src.base.model import Package, Image, Inputs, Configs, Outputs, Response, Request, Output, Input, Config
+from sdks.novavision.src.base.model import (
+    Package, Image, Images, Inputs, Configs, Outputs,
+    Response, Request, Output, Input, Config
+)
 
 
+# =====================================================
+# Executor 1: RotateImage (1 input, 1 output)
+# =====================================================
+
+# --- Input Parametresi ---
 class InputImage(Input):
+    """Döndürülecek resim girişi."""
     name: Literal["inputImage"] = "inputImage"
-    value: Union[List[Image], Image]
-    type: str = "object"
-
-    @validator("type", pre=True, always=True)
-    def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
-        if isinstance(value, Image):
-            return "object"
-        elif isinstance(value, list):
-            return "list"
-
-    class Config:
-        title = "Image"
+    value: Images
+    type: Literal["Images"] = "Images"
 
 
-class OutputImage(Output):
-    name: Literal["outputImage"] = "outputImage"
-    value: Union[List[Image],Image]
-    type: str = "object"
-
-    @validator("type", pre=True, always=True)
-    def set_type_based_on_value(cls, value, values):
-        value = values.get('value')
-        if isinstance(value, Image):
-            return "object"
-        elif isinstance(value, list):
-            return "list"
-
-    class Config:
-        title = "Image"
-
-
-class KeepSideFalse(Config):
-    name: Literal["False"] = "False"
-    value: Literal[False] = False
-    type: Literal["bool"] = "bool"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Disable"
-
-
-class KeepSideTrue(Config):
-    name: Literal["True"] = "True"
-    value: Literal[True] = True
-    type: Literal["bool"] = "bool"
-    field: Literal["option"] = "option"
-
-    class Config:
-        title = "Enable"
-
-
-class KeepSideBBox(Config):
-    """
-        Rotate image without catting off sides.
-    """
-    name: Literal["KeepSide"] = "KeepSide"
-    value: Union[KeepSideTrue, KeepSideFalse]
-    type: Literal["object"] = "object"
-    field: Literal["dropdownlist"] = "dropdownlist"
-
-    class Config:
-        title = "Keep Sides"
-
-
+# --- Config Parametresi: Derece ---
 class Degree(Config):
     """
-        Positive angles specify counterclockwise rotation while negative angles indicate clockwise rotation.
+        Resmin döndürüleceği açı değeri.
+        Pozitif değerler saat yönünün tersine,
+        negatif değerler saat yönünde döndürme yapar.
     """
     name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359.0, le=359.0,default=0)
+    value: int = Field(ge=-359, le=359, default=0)
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
-    placeHolder: Literal["[-359, 359]"] = "[-359, 359]"
 
     class Config:
         title = "Angle"
 
 
-class PackageInputs(Inputs):
+# --- Inputs ---
+class RotateImageInputs(Inputs):
     inputImage: InputImage
 
 
-class PackageConfigs(Configs):
+# --- Configs ---
+class RotateImageConfigs(Configs):
     degree: Degree
-    drawBBox: KeepSideBBox
 
 
-class PackageOutputs(Outputs):
+# --- Output Parametresi ---
+class OutputImage(Output):
+    """Döndürülmüş resim çıktısı."""
+    name: Literal["outputImage"] = "outputImage"
+    value: Images
+    type: Literal["Images"] = "Images"
+
+
+# --- Outputs ---
+class RotateImageOutputs(Outputs):
     outputImage: OutputImage
 
 
-class PackageRequest(Request):
-    inputs: Optional[PackageInputs]
-    configs: PackageConfigs
+# --- Request ---
+class RotateImageRequest(Request):
+    inputs: Optional[RotateImageInputs]
+    configs: RotateImageConfigs
 
     class Config:
-        json_schema_extra = {
+        schema_extra = {
             "target": "configs"
         }
 
 
-class PackageResponse(Response):
-    outputs: PackageOutputs
+# --- Response ---
+class RotateImageResponse(Response):
+    outputs: RotateImageOutputs
 
 
-class PackageExecutor(Config):
-    name: Literal["Package"] = "Package"
-    value: Union[PackageRequest, PackageResponse]
+# --- Executor ---
+class RotateImageExecutor(Config):
+    name: Literal["RotateImageExecutor"] = "RotateImageExecutor"
+    value: Union[RotateImageRequest, RotateImageResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
 
     class Config:
-        title = "Package"
-        json_schema_extra = {
+        title = "Rotate Image"
+        schema_extra = {
             "target": {
                 "value": 0
             }
         }
 
 
+# =====================================================
+# Executor 2: BlendImages (2 input, 2 output)
+# =====================================================
+
+# --- Input Parametreleri ---
+class InputImage1(Input):
+    """Karıştırılacak birinci resim."""
+    name: Literal["inputImage1"] = "inputImage1"
+    value: Images
+    type: Literal["Images"] = "Images"
+
+
+class InputImage2(Input):
+    """Karıştırılacak ikinci resim."""
+    name: Literal["inputImage2"] = "inputImage2"
+    value: Images
+    type: Literal["Images"] = "Images"
+
+
+# --- Inputs ---
+class BlendImagesInputs(Inputs):
+    inputImage1: InputImage1
+    inputImage2: InputImage2
+
+
+# --- Output Parametreleri ---
+class OutputBlended(Output):
+    """İki resmin karışım sonucu."""
+    name: Literal["outputBlended"] = "outputBlended"
+    value: Images
+    type: Literal["Images"] = "Images"
+
+
+class OutputDifference(Output):
+    """İki resim arasındaki fark."""
+    name: Literal["outputDifference"] = "outputDifference"
+    value: Images
+    type: Literal["Images"] = "Images"
+
+
+# --- Outputs ---
+class BlendImagesOutputs(Outputs):
+    outputBlended: OutputBlended
+    outputDifference: OutputDifference
+
+
+# --- Request (Configs yok, sadece Inputs) ---
+class BlendImagesRequest(Request):
+    inputs: Optional[BlendImagesInputs]
+
+
+# --- Response ---
+class BlendImagesResponse(Response):
+    outputs: BlendImagesOutputs
+
+
+# --- Executor ---
+class BlendImagesExecutor(Config):
+    name: Literal["BlendImagesExecutor"] = "BlendImagesExecutor"
+    value: Union[BlendImagesRequest, BlendImagesResponse]
+    type: Literal["object"] = "object"
+    field: Literal["option"] = "option"
+
+    class Config:
+        title = "Blend Images"
+        schema_extra = {
+            "target": {
+                "value": 0
+            }
+        }
+
+
+# =====================================================
+# Package Yapısı
+# =====================================================
+
+# Birden fazla executor olduğu için ConfigExecutor'da target belirtilmez (Şartname Kod4)
 class ConfigExecutor(Config):
     name: Literal["ConfigExecutor"] = "ConfigExecutor"
-    value: Union[PackageExecutor]
+    value: Union[RotateImageExecutor, BlendImagesExecutor]
     type: Literal["executor"] = "executor"
     field: Literal["dependentDropdownlist"] = "dependentDropdownlist"
 
     class Config:
         title = "Task"
-        json_schema_extra = {
-            "target": "value"
-        }
 
 
 class PackageConfigs(Configs):
@@ -147,4 +193,4 @@ class PackageConfigs(Configs):
 class PackageModel(Package):
     configs: PackageConfigs
     type: Literal["component"] = "component"
-    name: Literal["Package"] = "Package"
+    name: Literal["ImageFilters"] = "ImageFilters"
