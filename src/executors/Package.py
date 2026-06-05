@@ -1,10 +1,3 @@
-"""
-    RotateImage Executor
-
-    Resmi belirtilen derece kadar döndürür.
-    1 input (resim), 1 output (döndürülmüş resim).
-"""
-
 import os
 import cv2
 import sys
@@ -30,10 +23,6 @@ class RotateImage(Component):
         return {}
 
     def rotation(self, image):
-        """
-        Resmi belirtilen derece kadar döndürür.
-        Kenarlar kesilmeden canvas genişletilir.
-        """
         height, width = image.shape[:2]
         image_center = (width / 2, height / 2)
 
