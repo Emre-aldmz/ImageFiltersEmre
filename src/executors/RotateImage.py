@@ -47,6 +47,9 @@ class RotateImage(Component):
             image, rotation_arr, (bound_w, bound_h)
         )
 
+        # DEBUG: Write the received degree on the image to see what is actually coming from the platform
+        cv2.putText(img_rotation, f"Received Deg: {self.rotation_degree}", (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
+
         return img_rotation
 
     def run(self):
