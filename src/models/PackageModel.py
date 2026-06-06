@@ -1,15 +1,23 @@
-from pydantic import Field
+from pydantic import Field, validator
 from typing import List, Optional, Union, Literal
 from sdks.novavision.src.base.model import (
-    Package, Image, Images, Inputs, Configs, Outputs,
+    Package, Image, Inputs, Configs, Outputs,
     Response, Request, Output, Input, Config
 )
 
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
 
 
 class Degree(Config):
@@ -32,8 +40,16 @@ class RotateImageConfigs(Configs):
 
 class OutputImage(Output):
     name: Literal["outputImage"] = "outputImage"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
 
 
 class RotateImageOutputs(Outputs):
@@ -45,7 +61,7 @@ class RotateImageRequest(Request):
     configs: RotateImageConfigs
 
     class Config:
-        json_schema_extra = {
+        schema_extra = {
             "target": "configs"
         }
 
@@ -62,7 +78,7 @@ class RotateImageExecutor(Config):
 
     class Config:
         title = "Rotate Image"
-        json_schema_extra = {
+        schema_extra = {
             "target": {
                 "value": 0
             }
@@ -71,14 +87,30 @@ class RotateImageExecutor(Config):
 
 class InputImage1(Input):
     name: Literal["inputImage1"] = "inputImage1"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
 
 
 class InputImage2(Input):
     name: Literal["inputImage2"] = "inputImage2"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
 
 
 class BlendImagesInputs(Inputs):
@@ -88,14 +120,30 @@ class BlendImagesInputs(Inputs):
 
 class OutputBlended(Output):
     name: Literal["outputBlended"] = "outputBlended"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
 
 
 class OutputDifference(Output):
     name: Literal["outputDifference"] = "outputDifference"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Union[List[Image], Image]
+    type: str = "object"
+
+    @validator("type", pre=True, always=True)
+    def set_type_based_on_value(cls, value, values):
+        value = values.get('value')
+        if isinstance(value, Image):
+            return "object"
+        elif isinstance(value, list):
+            return "list"
 
 
 class BlendImagesOutputs(Outputs):
@@ -119,7 +167,7 @@ class BlendImagesExecutor(Config):
 
     class Config:
         title = "Blend Images"
-        json_schema_extra = {
+        schema_extra = {
             "target": {
                 "value": 0
             }
