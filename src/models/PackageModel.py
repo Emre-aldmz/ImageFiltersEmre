@@ -8,8 +8,8 @@ from sdks.novavision.src.base.model import (
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Image
+    type: Literal["Image"] = "Image"
 
 
 class Degree(Config):
@@ -32,8 +32,8 @@ class RotateImageConfigs(Configs):
 
 class OutputImage(Output):
     name: Literal["outputImage"] = "outputImage"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Image
+    type: Literal["Image"] = "Image"
 
 
 class RotateImageOutputs(Outputs):
@@ -71,14 +71,14 @@ class RotateImageExecutor(Config):
 
 class InputImage1(Input):
     name: Literal["inputImage1"] = "inputImage1"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Image
+    type: Literal["Image"] = "Image"
 
 
 class InputImage2(Input):
     name: Literal["inputImage2"] = "inputImage2"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Image
+    type: Literal["Image"] = "Image"
 
 
 class BlendImagesInputs(Inputs):
@@ -88,14 +88,14 @@ class BlendImagesInputs(Inputs):
 
 class OutputBlended(Output):
     name: Literal["outputBlended"] = "outputBlended"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Image
+    type: Literal["Image"] = "Image"
 
 
 class OutputDifference(Output):
     name: Literal["outputDifference"] = "outputDifference"
-    value: Images
-    type: Literal["Images"] = "Images"
+    value: Image
+    type: Literal["Image"] = "Image"
 
 
 class BlendImagesOutputs(Outputs):
