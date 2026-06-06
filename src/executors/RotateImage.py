@@ -15,7 +15,11 @@ class RotateImage(Component):
     def __init__(self, request, bootstrap):
         super().__init__(request, bootstrap)
         self.request.model = PackageModel(**(self.request.data))
-        self.rotation_degree = self.request.get_param("Degree")
+        try:
+            self.rotation_degree = int(self.request.model.configs.executor.value.value.configs.degree.value)
+        except Exception:
+            deg = self.request.get_param("Degree")
+            self.rotation_degree = int(deg) if deg is not None else 0
         self.image = self.request.get_param("inputImage")
 
     @staticmethod
