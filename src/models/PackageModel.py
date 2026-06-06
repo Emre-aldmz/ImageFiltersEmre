@@ -55,7 +55,7 @@ class RotateImageResponse(Response):
 
 
 class RotateImageExecutor(Config):
-    name: Literal["RotateImageExecutor"] = "RotateImageExecutor"
+    name: Literal["RotateImage"] = "RotateImage"
     value: Union[RotateImageRequest, RotateImageResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
@@ -112,7 +112,7 @@ class BlendImagesResponse(Response):
 
 
 class BlendImagesExecutor(Config):
-    name: Literal["BlendImagesExecutor"] = "BlendImagesExecutor"
+    name: Literal["BlendImages"] = "BlendImages"
     value: Union[BlendImagesRequest, BlendImagesResponse]
     type: Literal["object"] = "object"
     field: Literal["option"] = "option"
