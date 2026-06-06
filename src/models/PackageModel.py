@@ -14,7 +14,7 @@ class InputImage(Input):
 
 class Degree(Config):
     name: Literal["Degree"] = "Degree"
-    value: int = Field(ge=-359, le=359, default=0)
+    value: Union[int, str] = 0
     type: Literal["number"] = "number"
     field: Literal["textInput"] = "textInput"
 
@@ -24,10 +24,16 @@ class Degree(Config):
 
 class RotateImageInputs(Inputs):
     inputImage: InputImage
+    value: str = "Inputs"
+    type: Literal["object"] = "object"
+    field: Literal["input"] = "input"
 
 
 class RotateImageConfigs(Configs):
     degree: Degree
+    value: str = "Configs"
+    type: Literal["object"] = "object"
+    field: Literal["config"] = "config"
 
 
 class OutputImage(Output):
@@ -38,6 +44,8 @@ class OutputImage(Output):
 
 class RotateImageOutputs(Outputs):
     outputImage: OutputImage
+    type: Literal["object"] = "object"
+    field: Literal["output"] = "output"
 
 
 class RotateImageRequest(Request):
@@ -84,6 +92,9 @@ class InputImage2(Input):
 class BlendImagesInputs(Inputs):
     inputImage1: InputImage1
     inputImage2: InputImage2
+    value: str = "Inputs"
+    type: Literal["object"] = "object"
+    field: Literal["input"] = "input"
 
 
 class OutputBlended(Output):
@@ -101,6 +112,8 @@ class OutputDifference(Output):
 class BlendImagesOutputs(Outputs):
     outputBlended: OutputBlended
     outputDifference: OutputDifference
+    type: Literal["object"] = "object"
+    field: Literal["output"] = "output"
 
 
 class BlendImagesRequest(Request):
@@ -138,6 +151,9 @@ class ConfigExecutor(Config):
 
 class PackageConfigs(Configs):
     executor: ConfigExecutor
+    value: str = "Configs"
+    type: Literal["object"] = "object"
+    field: Literal["config"] = "config"
 
 
 class PackageModel(Package):

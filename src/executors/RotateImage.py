@@ -18,8 +18,11 @@ class RotateImage(Component):
         try:
             self.rotation_degree = int(self.request.model.configs.executor.value.value.configs.degree.value)
         except Exception:
-            deg = self.request.get_param("Degree")
-            self.rotation_degree = int(deg) if deg is not None else 0
+            deg = self.request.get_param("Degree") or self.request.get_param("degree")
+            try:
+                self.rotation_degree = int(deg) if deg is not None else 0
+            except ValueError:
+                self.rotation_degree = 0
         self.image = self.request.get_param("inputImage")
 
     @staticmethod
