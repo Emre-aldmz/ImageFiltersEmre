@@ -1,5 +1,5 @@
 from pydantic import Field
-from typing import List, Optional, Union, Literal
+from typing import List, Optional, Union, Literal, Any
 from sdks.novavision.src.base.model import (
     Package, Image, Images, Inputs, Configs, Outputs,
     Response, Request, Output, Input, Config
@@ -8,7 +8,7 @@ from sdks.novavision.src.base.model import (
 
 class InputImage(Input):
     name: Literal["inputImage"] = "inputImage"
-    value: Image
+    value: Any
     type: Literal["Image"] = "Image"
 
 
@@ -23,6 +23,7 @@ class Degree(Config):
 
 
 class RotateImageInputs(Inputs):
+    name: Literal["RotateImage"] = "RotateImage"
     inputImage: InputImage
     value: str = "Inputs"
     type: Literal["object"] = "object"
@@ -79,17 +80,18 @@ class RotateImageExecutor(Config):
 
 class InputImage1(Input):
     name: Literal["inputImage1"] = "inputImage1"
-    value: Image
+    value: Any
     type: Literal["Image"] = "Image"
 
 
 class InputImage2(Input):
     name: Literal["inputImage2"] = "inputImage2"
-    value: Image
+    value: Any
     type: Literal["Image"] = "Image"
 
 
 class BlendImagesInputs(Inputs):
+    name: Literal["BlendImages"] = "BlendImages"
     inputImage1: InputImage1
     inputImage2: InputImage2
     value: str = "Inputs"
